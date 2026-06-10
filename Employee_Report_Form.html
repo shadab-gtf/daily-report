@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Daily Work Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <style>
+    /* ─── GOOGLE SYSTEM THEME ───────────────────────────── */
+    :root {
+      --google-blue: #4285F4;
+      --google-green: #34A853;
+      --google-yellow: #FBBC05;
+      --google-red: #EA4335;
+      --google-grey-dark: #3C4043;
+      --google-grey-light: #F1F3F4;
+      --white: #FFFFFF;
+      --border-color: #DADCE0;
+      --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+      --shadow-md: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+      --font-primary: 'Poppins', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background-color: #F0F4F9;
+      color: var(--google-grey-dark);
+      line-height: 1.6;
+      padding: 32px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 770px; /* Standard Google Form container width */
+      margin: 0 auto;
+    }
+
+    /* ─── HEADER CARD ───────────────────────────────────── */
+    .header-card {
+      background-color: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      border-top: 10px solid var(--google-blue);
+      padding: 28px 24px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-card h1 {
+      font-size: 32px;
+      font-weight: 500;
+      color: #202124;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .header-card p {
+      font-size: 14px;
+      color: #5F6368;
+    }
+
+    /* ─── SYSTEM CARDS ─────────────────────────────────── */
+    .card {
+      background-color: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: box-shadow 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #202124;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #E8EAED;
+      padding-bottom: 12px;
+    }
+
+    .card-title .material-icons-round {
+      color: var(--google-blue);
+      font-size: 24px;
+    }
+
+    /* ─── FORM GRID & FIELDS ────────────────────────────── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 600px) {
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #202124;
+    }
+
+    .form-group label span {
+      color: var(--google-red);
+      margin-left: 2px;
+    }
+
+    .form-control {
+      font-family: inherit;
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--white);
+      color: var(--google-grey-dark);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--google-blue);
+      background-color: #F8FBFE;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.1), 0 1px 3px 1px rgba(60,64,67,0.05);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    select.form-control {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235f6368'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+      padding-right: 36px;
+    }
+
+    /* ─── DYNAMIC TASK ITEMS ────────────────────────────── */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .task-item {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 20px;
+      background-color: #FAFBFD;
+      transition: border-color 0.2s;
+      position: relative;
+    }
+
+    .task-item:hover {
+      border-color: #B4D2FD;
+    }
+
+    .task-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .task-item-header h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--google-blue);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .remove-task-btn {
+      background: none;
+      border: none;
+      color: #5F6368;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .remove-task-btn:hover {
+      background-color: #FCE8E6;
+      color: var(--google-red);
+    }
+
+    .task-item-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .task-item-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ─── BUTTONS ───────────────────────────────────────── */
+    .btn {
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background-color: var(--google-blue);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background-color: #1A73E8;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    }
+
+    .btn-outline {
+      background-color: var(--white);
+      border-color: var(--border-color);
+      color: var(--google-blue);
+    }
+
+    .btn-outline:hover {
+      background-color: #F8FBFE;
+      border-color: #D2E3FC;
+    }
+
+    .btn-success {
+      background-color: var(--google-green);
+      color: var(--white);
+    }
+
+    .btn-success:hover {
+      background-color: #2D8E47;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .actions-bar {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ─── KPI METRIC GRID ───────────────────────────────── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+      border-top: 1px solid #E8EAED;
+      padding-top: 20px;
+    }
+
+    .kpi-card {
+      background-color: var(--google-grey-light);
+      border-radius: 6px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid #E8EAED;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: #5F6368;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: #202124;
+      margin-top: 4px;
+    }
+
+    /* ─── TOAST / SNACKBAR ─────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background-color: #323232;
+      color: var(--white);
+      padding: 14px 20px;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+      z-index: 9999;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    #toast.success {
+      border-left: 6px solid var(--google-green);
+    }
+
+    #toast.error {
+      border-left: 6px solid var(--google-red);
+    }
+
+    /* ─── LOADING CIRCLE ────────────────────────────────── */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ─── CONFIG BANNER ─────────────────────────────────── */
+    .config-banner {
+      background-color: #FEF7E0;
+      border: 1px solid var(--google-yellow);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .config-banner .material-icons-round {
+      color: #B06000;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .config-banner p {
+      font-size: 13px;
+      color: #202124;
+      line-height: 1.5;
+    }
+
+    .config-banner strong {
+      color: #B06000;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- CONFIG BANNER -->
+    <div class="config-banner" id="configBanner">
+      <span class="material-icons-round">warning</span>
+      <div>
+        <strong>Setup Required — Connect to Google Sheets</strong>
+        <p>Open this file, find SCRIPT_URL near the top of the script section, and replace it with your deployed Google Apps Script Web App URL.</p>
+      </div>
+    </div>
+
+    <!-- HEADER CARD -->
+    <header class="header-card">
+      <h1>Employee Daily Work Report</h1>
+      <p>Enterprise Workforce Productivity System — Google Workspace Portal</p>
+    </header>
+
+    <form id="reportForm" novalidate>
+
+      <!-- CARD 1: EMPLOYEE INFORMATION -->
+      <section class="card">
+        <div class="card-title">
+          <span class="material-icons-round">person</span>
+          Employee Profile
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="fullName">Employee Name <span>*</span></label>
+            <input class="form-control" id="fullName" name="fullName" placeholder="e.g. John Smith" required />
+          </div>
+          <div class="form-group">
+            <label for="managerName">Manager Name</label>
+            <input class="form-control" id="managerName" name="managerName" placeholder="e.g. Sarah Johnson" value="Saurabh Yadav" />
+          </div>
+          <div class="form-group">
+            <label for="department">Department <span>*</span></label>
+            <select class="form-control" id="department" name="department" required>
+              <option value="">Select Department</option>
+              <option>Engineering</option>
+              <option>Design</option>
+              <option>Product</option>
+              <option>Marketing</option>
+              <option>Sales</option>
+              <option>Finance</option>
+              <option>Operations</option>
+              <option>HR</option>
+              <option>Legal</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="designation">Designation <span>*</span></label>
+            <input class="form-control" id="designation" name="designation" placeholder="e.g. Senior Software Engineer" required />
+          </div>
+          <div class="form-group">
+            <label for="reportDateInput">Day <span>*</span></label>
+            <input class="form-control" type="date" id="reportDateInput" name="reportDate" required />
+          </div>
+          <div class="form-group">
+            <label for="reportingTo">Reporting to</label>
+            <input class="form-control" id="reportingTo" name="reportingTo" placeholder="e.g. Director of Engineering" value="Saurabh Yadav" />
+          </div>
+          <div class="form-group">
+            <label for="workMode">Location / Work Mode</label>
+            <select class="form-control" id="workMode" name="workMode">
+              <option value="">Select Work Mode</option>
+              <option>Remote</option>
+              <option>On-Site</option>
+              <option>Hybrid</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARD 2: TASK MANAGEMENT LOG -->
+      <section class="card">
+        <div class="card-title">
+          <span class="material-icons-round">assignment</span>
+          Task Management Log
+        </div>
+        <div class="task-list" id="taskList"></div>
+        
+        <div class="actions-bar">
+          <button type="button" class="btn btn-outline" onclick="addTaskItem()">
+            <span class="material-icons-round">add</span> Add Task
+          </button>
+        </div>
+
+        <div class="kpi-strip">
+          <div class="kpi-card">
+            <div class="kpi-label">Total Tasks</div>
+            <div class="kpi-value" id="kpiTotal">0</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Completed</div>
+            <div class="kpi-value" id="kpiDone" style="color: var(--google-green)">0</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Spent Hours</div>
+            <div class="kpi-value" id="kpiHours" style="color: var(--google-blue)">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARD 3: END OF DAY REVIEW -->
+      <section class="card">
+        <div class="card-title">
+          <span class="material-icons-round">rate_review</span>
+          End of Day Note
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="goalsAchieved">Goal Achieved (%) <span>*</span></label>
+            <input class="form-control" type="number" id="goalsAchieved" name="goalsAchieved" min="0" max="100" placeholder="e.g. 85" required />
+          </div>
+          <div class="form-group full-width">
+            <label for="accomplishments">End of Day Note</label>
+            <textarea class="form-control" id="accomplishments" name="accomplishments" placeholder="Provide a summary of what you accomplished today, challenges faced, or general outcomes..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUBMIT AREA -->
+      <div style="text-align: right; margin-bottom: 40px;">
+        <button type="submit" class="btn btn-primary btn-success" id="submitBtn">
+          <span class="spinner" id="submitSpinner"></span>
+          <span id="submitLabel">Submit Daily Report</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast">
+    <span class="material-icons-round" id="toastIcon">check_circle</span>
+    <span id="toastMsg">Report submitted successfully!</span>
+  </div>
+
+  <!-- ─── SCRIPT ─────────────────────────────────────────────── -->
+  <script>
+    // ══════════════════════════════════════════════════════════
+    //  ⚙️  CONFIGURATION — PASTE YOUR SCRIPT URL HERE
+    // ══════════════════════════════════════════════════════════
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx2sCj2VzD2om5SODQ1VlRbbtbV8-_kZo6BM1ORiGbj4taG6pPLJ58-m_Qfq18exKOT0Q/exec";
+    // ══════════════════════════════════════════════════════════
+
+    // Show/hide config banner
+    if (SCRIPT_URL && SCRIPT_URL.startsWith("https://")) {
+      document.getElementById('configBanner').style.display = 'none';
+    }
+
+    // ─── DATE INITIALIZATION ─────────────────────────────────
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    document.getElementById('reportDateInput').value = `${year}-${month}-${day}`;
+
+    // ─── SELECT CONTROLS STYLING ──────────────────────────────
+    function updateSelectStyle(sel) {
+      sel.style.backgroundColor = '';
+      sel.style.color = '';
+      sel.style.borderColor = '';
+      
+      const v = sel.value;
+      if (v === 'Completed' || v === 'Low') {
+        sel.style.backgroundColor = '#E6F4EA';
+        sel.style.color = '#137333';
+        sel.style.borderColor = '#A3E2B6';
+      } else if (v === 'In Progress' || v === 'Medium') {
+        sel.style.backgroundColor = '#E8F0FE';
+        sel.style.color = '#1A73E8';
+        sel.style.borderColor = '#ADCCFB';
+      } else if (v === 'Review' || v === 'High') {
+        sel.style.backgroundColor = '#FEF7E0';
+        sel.style.color = '#B06000';
+        sel.style.borderColor = '#FEEFC3';
+      } else if (v === 'Blocked' || v === 'Critical') {
+        sel.style.backgroundColor = '#FCE8E6';
+        sel.style.color = '#C5221F';
+        sel.style.borderColor = '#FAD2CF';
+      }
+    }
+
+    // ─── DYNAMIC TASK LOGIC ──────────────────────────────────
+    let taskCount = 0;
+
+    function addTaskItem(data = {}) {
+      taskCount++;
+      const n = taskCount;
+      const container = document.getElementById('taskList');
+      const item = document.createElement('div');
+      item.className = 'task-item';
+      item.setAttribute('data-index', n);
+      item.innerHTML = `
+        <div class="task-item-header">
+          <h4>Task #${n}</h4>
+          <button type="button" class="remove-task-btn" onclick="removeTask(this)">
+            <span class="material-icons-round">delete</span>
+          </button>
+        </div>
+        <div class="task-item-grid">
+          <div class="form-group full-width">
+            <label for="task_title_${n}">Description <span>*</span></label>
+            <textarea id="task_title_${n}" name="task_title_${n}" class="form-control" placeholder="What did you work on?" required>${data.title || ''}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="task_notes_${n}">Notes</label>
+            <input id="task_notes_${n}" name="task_notes_${n}" class="form-control" placeholder="Additional notes..." value="${data.notes || ''}" />
+          </div>
+          <div class="form-group">
+            <label for="task_actual_${n}">Spend Hours</label>
+            <input type="number" id="task_actual_${n}" name="task_actual_${n}" class="form-control" placeholder="0" min="0" step="0.5" value="${data.actual || ''}" oninput="updateKPIs()" />
+          </div>
+          <div class="form-group">
+            <label for="task_status_${n}">Status</label>
+            <select id="task_status_${n}" name="task_status_${n}" class="form-control" onchange="updateSelectStyle(this); updateKPIs()">
+              <option value="">Select Status</option>
+              ${['Not Started', 'In Progress', 'Review', 'Blocked', 'Completed']
+                .map(s => `<option ${data.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="task_priority_${n}">Priority</label>
+            <select id="task_priority_${n}" name="task_priority_${n}" class="form-control" onchange="updateSelectStyle(this)">
+              <option value="">Select Priority</option>
+              ${['Critical', 'High', 'Medium', 'Low']
+                .map(p => `<option ${data.priority === p ? 'selected' : ''}>${p}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      `;
+      container.appendChild(item);
+      item.querySelectorAll('select').forEach(s => updateSelectStyle(s));
+      updateKPIs();
+    }
+
+    function removeTask(btn) {
+      btn.closest('.task-item').remove();
+      updateKPIs();
+      // Re-index h4 elements for list display
+      document.querySelectorAll('.task-item').forEach((item, idx) => {
+        item.querySelector('h4').textContent = `Task #${idx + 1}`;
+      });
+    }
+
+    function updateKPIs() {
+      const items = document.querySelectorAll('.task-item');
+      let total = items.length, done = 0, hours = 0;
+      items.forEach(item => {
+        const idx = item.getAttribute('data-index');
+        const statusSel = item.querySelector(`[name="task_status_${idx}"]`);
+        const actualIn = item.querySelector(`[name="task_actual_${idx}"]`);
+        if (statusSel && statusSel.value === 'Completed') done++;
+        if (actualIn && actualIn.value) hours += parseFloat(actualIn.value) || 0;
+      });
+      document.getElementById('kpiTotal').textContent = total;
+      document.getElementById('kpiDone').textContent = done;
+      document.getElementById('kpiHours').textContent = hours.toFixed(1);
+    }
+
+    // Add default initial tasks
+    addTaskItem();
+    addTaskItem();
+
+    // ─── TOAST NOTIFICATION ──────────────────────────────────
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      
+      const icon = document.getElementById('toastIcon');
+      if (type === 'success') {
+        t.className = 'show success';
+        icon.textContent = 'check_circle';
+        icon.style.color = 'var(--google-green)';
+      } else {
+        t.className = 'show error';
+        icon.textContent = 'error';
+        icon.style.color = 'var(--google-red)';
+      }
+      
+      setTimeout(() => t.className = '', 4500);
+    }
+
+    // ─── FORM COLLECTION ─────────────────────────────────────
+    function collectFormData() {
+      const fd = new FormData(document.getElementById('reportForm'));
+      const data = {};
+
+      // Scalar fields
+      ['fullName', 'managerName', 'department', 'designation', 'reportDate', 'reportingTo', 'workMode', 'goalsAchieved', 'accomplishments'].forEach(k => {
+        data[k] = fd.get(k) || '';
+      });
+
+      // Collect tasks from dynamic items
+      const tasks = [];
+      document.querySelectorAll('.task-item').forEach(item => {
+        const idx = item.getAttribute('data-index');
+        const title = item.querySelector(`[name="task_title_${idx}"]`).value;
+        const notes = item.querySelector(`[name="task_notes_${idx}"]`).value;
+        const actual = item.querySelector(`[name="task_actual_${idx}"]`).value;
+        const status = item.querySelector(`[name="task_status_${idx}"]`).value;
+        const priority = item.querySelector(`[name="task_priority_${idx}"]`).value;
+
+        if (title.trim()) {
+          tasks.push({
+            title: title,
+            notes: notes,
+            actual: actual,
+            status: status,
+            priority: priority,
+            est: "",
+            cat: "",
+            prog: ""
+          });
+        }
+      });
+
+      data.tasks = JSON.stringify(tasks);
+      data.meetings = JSON.stringify([]); // Removed meetings as requested
+      data.submittedAt = new Date().toISOString();
+
+      return data;
+    }
+
+    // ─── SUBMIT HANDLER ──────────────────────────────────────
+    document.getElementById('reportForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      // Basic validation
+      const required = this.querySelectorAll('[required]');
+      let valid = true;
+      let firstInvalid = null;
+      required.forEach(el => {
+        el.style.borderColor = '';
+        if (!el.value.trim()) {
+          el.style.borderColor = 'var(--google-red)';
+          valid = false;
+          if (!firstInvalid) firstInvalid = el;
+        }
+      });
+      
+      if (!valid) {
+        showToast('Please fill in all required fields.', 'error');
+        if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalid.focus();
+        }
+        return;
+      }
+
+      if (!SCRIPT_URL || !SCRIPT_URL.startsWith("https://")) {
+        showToast('⚙️ Please configure a valid Google Apps Script Web App URL first!', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      const spinner = document.getElementById('submitSpinner');
+      const label = document.getElementById('submitLabel');
+      
+      btn.disabled = true;
+      spinner.style.display = 'block';
+      label.textContent = 'Submitting…';
+
+      try {
+        const data = collectFormData();
+        const params = new URLSearchParams(data);
+
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: params,
+          mode: 'no-cors'
+        });
+
+        showToast('Report submitted successfully! Check your Google Sheet.', 'success');
+      } catch (err) {
+        showToast('Submission failed. Check your network or URL config.', 'error');
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        label.textContent = 'Submit Daily Report';
+      }
+    });
+  </script>
+</body>
+
+</html>
