@@ -42,11 +42,13 @@
       align-items: flex-start;
       min-height: 100vh;
     }
+
     .container {
       width: 95%;
       max-width: 1400px;
       margin: 0 auto;
     }
+
     /* ─── SYSTEM CARDS ─────────────────────────────────── */
     .card {
       background-color: var(--white);
@@ -610,7 +612,7 @@
       <form id="loginForm" onsubmit="handleLoginSubmit(event)">
         <div class="form-group" style="text-align: left;">
           <label for="loginEmployeeId">Employee ID <span>*</span></label>
-          <input class="form-control" id="loginEmployeeId" placeholder="e.g. GTF001 or saurabh.yadav" required
+          <input class="form-control" id="loginEmployeeId" placeholder="enter your Employee ID" required
             autocomplete="username" />
         </div>
         <button type="submit" id="loginBtn" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
@@ -698,7 +700,8 @@
                 </div>
                 <div class="form-group">
                   <label for="assignTaskTitle">Task Description <span>*</span></label>
-                  <textarea class="form-control" id="assignTaskTitle" placeholder="e.g. Integrate user authentication flow" style="min-height: 80px;" required></textarea>
+                  <textarea class="form-control" id="assignTaskTitle"
+                    placeholder="e.g. Integrate user authentication flow" style="min-height: 80px;" required></textarea>
                 </div>
                 <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0;">
                   <div class="form-group">
@@ -724,7 +727,8 @@
                 <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0;">
                   <div class="form-group">
                     <label for="assignEstHours">Est. Hours</label>
-                    <input type="number" class="form-control" id="assignEstHours" placeholder="e.g. 4" min="0" step="0.5" />
+                    <input type="number" class="form-control" id="assignEstHours" placeholder="e.g. 4" min="0"
+                      step="0.5" />
                   </div>
                   <div class="form-group">
                     <label for="assignNotes">Notes</label>
@@ -824,13 +828,15 @@
       <!-- EMPLOYEE VIEW -->
       <div id="employeeDashboard" style="display: none;">
         <!-- Tasks Assigned by Manager -->
-        <section class="card" id="assignedTasksSection" style="display: none; border-left: 6px solid var(--google-blue);">
+        <section class="card" id="assignedTasksSection"
+          style="display: none; border-left: 6px solid var(--google-blue);">
           <div class="card-title" style="margin-bottom: 12px;">
             <span class="material-icons-round" style="color: var(--google-blue);">assignment_ind</span>
             Tasks Assigned by Manager
           </div>
           <p style="font-size: 13px; color: #5f6368; margin-bottom: 16px;">
-            Your manager has assigned the following tasks. You can click <strong>"Import Task"</strong> to add them to your log for today.
+            Your manager has assigned the following tasks. You can click <strong>"Import Task"</strong> to add them to
+            your log for today.
           </p>
           <div class="table-responsive">
             <table class="data-table">
@@ -1250,7 +1256,7 @@
     function renderEmployeesDirectory() {
       const tbody = document.getElementById("employeesDirectoryBody");
       tbody.innerHTML = "";
-      
+
       const select = document.getElementById("assignEmployeeId");
       if (select) {
         select.innerHTML = '<option value="">Select Employee</option>';
